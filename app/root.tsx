@@ -1,5 +1,5 @@
 import stylesheet from "~/tailwind.css";
-import type { LinksFunction } from "@remix-run/node";
+import type { LinksFunction, MetaFunction } from "@remix-run/node";
 import {
   Links,
   LiveReload,
@@ -8,10 +8,19 @@ import {
   Scripts,
   ScrollRestoration,
 } from "@remix-run/react";
+import TopBar from "./components/TopBar";
+import Footer from "./components/Footer";
 
 export const links: LinksFunction = () => [
   { rel: "stylesheet", href: stylesheet },
 ];
+
+export const meta: MetaFunction = () => {
+  return [
+    { title: "App for Salirs" },
+    { name: "description", content: "Welcome to Gyeongho's App" },
+  ];
+};
 
 export default function App() {
   return (
@@ -23,7 +32,10 @@ export default function App() {
         <Links />
       </head>
       <body>
+        <TopBar />
         <Outlet />
+        <Footer />
+
         <ScrollRestoration />
         <Scripts />
         <LiveReload />

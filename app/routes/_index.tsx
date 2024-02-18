@@ -1,39 +1,12 @@
-import type { MetaFunction } from "@remix-run/node";
-
-export const meta: MetaFunction = () => {
-  return [
-    { title: "New Remix App" },
-    { name: "description", content: "Welcome to Remix!" },
-  ];
-};
-
 export default function Index() {
   return (
-    <div style={{ fontFamily: "system-ui, sans-serif", lineHeight: "1.8" }}>
-      <h1 className="text-4xl font-bold underline">Welcome to Remix</h1>
-      <ul>
-        <li>
-          <a
-            target="_blank"
-            href="https://remix.run/tutorials/blog"
-            rel="noreferrer">
-            15m Quickstart Blog Tutorial
-          </a>
-        </li>
-        <li>
-          <a
-            target="_blank"
-            href="https://remix.run/tutorials/jokes"
-            rel="noreferrer">
-            Deep Dive Jokes App Tutorial
-          </a>
-        </li>
-        <li>
-          <a target="_blank" href="https://remix.run/docs" rel="noreferrer">
-            Remix Docs
-          </a>
-        </li>
-      </ul>
-    </div>
+    <main className="flex flex-col items-center justify-center flex-1 py-10 text-center gap-4 h-dvh">
+      <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl">
+        App for Salirs
+      </h1>
+      <p className="max-w-[700px] text-gray-500 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed dark:text-gray-400">
+        Welcome to the App made by Gyeongho Ahn
+      </p>
+    </main>
   );
 }
