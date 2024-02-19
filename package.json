@@ -24,6 +24,7 @@
     "clsx": "^2.1.0",
     "isbot": "^4.1.0",
     "lucide-react": "^0.331.0",
+    "nodemailer": "^6.9.9",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "tailwind-merge": "^2.2.1",
@@ -32,6 +33,7 @@
   "devDependencies": {
     "@remix-run/dev": "^2.6.0",
     "@types/bcryptjs": "^2.4.6",
+    "@types/nodemailer": "^6.4.14",
     "@types/react": "^18.2.20",
     "@types/react-dom": "^18.2.7",
     "@typescript-eslint/eslint-plugin": "^6.7.4",
