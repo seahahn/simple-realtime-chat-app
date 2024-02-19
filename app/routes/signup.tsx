@@ -1,12 +1,17 @@
 import {Form, useActionData} from "@remix-run/react";
-import {ActionFunctionArgs, redirect} from "@remix-run/node";
+import {ActionFunctionArgs, LoaderFunctionArgs, redirect} from "@remix-run/node";
 import FormInput from "~/components/FormInput";
 import FormCheckbox from "~/components/FormCheckbox";
 import texts from "~/constants/texts";
 import PageTitle from "~/components/PageTitle";
 import FormButton from "~/components/FormButton";
-import {checkUserEmail, checkUserNickname, signUp} from "~/lib/auth.server";
+import {checkUserEmail, checkUserNickname, preventSignedInUser, signUp} from "~/lib/auth.server";
 import {badRequest} from "~/lib/utils";
+
+export async function loader({request}: LoaderFunctionArgs) {
+  const checkUserSession = await preventSignedInUser(request);
+  return checkUserSession;
+}
 
 export const action = async ({request}: ActionFunctionArgs) => {
   const formData = await request.formData();

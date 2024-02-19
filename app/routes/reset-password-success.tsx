@@ -1,5 +1,12 @@
+import {LoaderFunctionArgs} from "@remix-run/node";
 import PageTitle from "~/components/PageTitle";
 import texts from "~/constants/texts";
+import {preventSignedInUser} from "~/lib/auth.server";
+
+export async function loader({request}: LoaderFunctionArgs) {
+  const checkUserSession = await preventSignedInUser(request);
+  return checkUserSession;
+}
 
 export default function ResetPasswordSuccess() {
   return (

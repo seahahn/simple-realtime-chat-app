@@ -1,19 +1,26 @@
-import {ActionFunctionArgs} from "@remix-run/node";
-import {Form, Link, useActionData} from "@remix-run/react";
+import {ActionFunctionArgs, LoaderFunctionArgs} from "@remix-run/node";
+import {Form, Link, useActionData, useSearchParams} from "@remix-run/react";
 import FormButton from "~/components/FormButton";
 import FormCheckbox from "~/components/FormCheckbox";
 import FormInput from "~/components/FormInput";
 import PageTitle from "~/components/PageTitle";
 import texts from "~/constants/texts";
-import {createUserSession, signIn} from "~/lib/auth.server";
+import {createUserSession, preventSignedInUser, signIn} from "~/lib/auth.server";
 import {badRequest, validateUrl} from "~/lib/utils";
+
+export async function loader({request}: LoaderFunctionArgs) {
+  const checkUserSession = await preventSignedInUser(request);
+  return checkUserSession;
+}
 
 export const action = async ({request}: ActionFunctionArgs) => {
   const formData = await request.formData();
   const email = String(formData.get("email"));
   const password = String(formData.get("password"));
   const remember = !!formData.get("remember-me");
-  const redirectTo = validateUrl(String(formData.get("redirectTo")) || "/");
+  const url = String(formData.get("redirect-to"));
+  const redirectTo = validateUrl(String(formData.get("redirect-to")) || "/");
+  console.log("redirectTo", url, redirectTo);
 
   const errors: {formError?: string} = {};
 
@@ -30,6 +37,7 @@ export const action = async ({request}: ActionFunctionArgs) => {
 
 export default function SignIn() {
   const actionData = useActionData<typeof action>();
+  const [searchParams] = useSearchParams();
 
   return (
     <main className="min-h-screen bg-white flex flex-col justify-center py-12 sm:px-6 lg:px-8">
@@ -71,6 +79,11 @@ export default function SignIn() {
                 {texts.RESET_PASSWORD}
               </Link>
             </div>
+            <input
+              type="hidden"
+              name="redirect-to"
+              value={searchParams.get("redirectTo") ?? undefined}
+            />
           </Form>
         </div>
       </div>
