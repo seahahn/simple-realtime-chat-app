@@ -2,7 +2,7 @@ import {Link} from "@remix-run/react";
 
 const TopBar = () => {
   return (
-    <header className="h-16 border-b flex items-center justify-center">
+    <header className="fixed w-full h-16 border-b flex items-center justify-center">
       <div className="container flex items-center justify-between px-4">
         <Link className="flex items-center gap-2 text-lg font-semibold" to="/">
           <FlagIcon className="h-6 w-6" />
