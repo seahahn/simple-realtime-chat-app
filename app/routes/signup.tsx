@@ -1,30 +1,42 @@
-import {Button} from "~/components/ui/button";
 import {Form, useActionData} from "@remix-run/react";
-import {ActionFunctionArgs, json, redirect} from "@remix-run/node";
+import {ActionFunctionArgs, redirect} from "@remix-run/node";
 import FormInput from "~/components/FormInput";
 import FormCheckbox from "~/components/FormCheckbox";
 import texts from "~/constants/texts";
 import PageTitle from "~/components/PageTitle";
 import FormButton from "~/components/FormButton";
+import {checkUserEmail, checkUserNickname, signUp} from "~/lib/auth.server";
+import {badRequest} from "~/lib/utils";
 
 export const action = async ({request}: ActionFunctionArgs) => {
   const formData = await request.formData();
-  const email = formData.get("email");
-  const password = formData.get("password");
-  const confirmPassword = formData.get("confirmPassword");
+  const email = String(formData.get("email"));
+  const nickname = String(formData.get("nickname"));
+  const password = String(formData.get("password"));
+  const confirmPassword = String(formData.get("confirm-password"));
 
-  const errors: {password?: string} = {};
+  const errors: {email?: string; nickname?: string; password?: string} = {};
 
-  // Check if the passwords are matched
+  const duplicatedEmail = await checkUserEmail(email);
+  if (duplicatedEmail) {
+    errors.email = `User with email ${email} already exists`;
+  }
+
+  const duplicatedNickname = await checkUserNickname(nickname);
+  if (duplicatedNickname) {
+    errors.nickname = `User with nickname ${nickname} already exists`;
+  }
+
   if (password !== confirmPassword) {
     errors.password = "Passwords do not match";
   }
 
   if (Object.keys(errors).length > 0) {
-    return json({errors});
+    return badRequest({errors});
   }
 
   // Request to create the user account
+  await signUp({email, nickname, password});
 
   return redirect("/signup-success");
 };
@@ -47,6 +59,20 @@ export default function SignUp() {
               type="email"
               required
             />
+            {actionData?.errors?.email ? (
+              <em className="text-xs text-red-700 not-italic">{actionData?.errors.email}</em>
+            ) : null}
+            <FormInput
+              labelText="Nickname"
+              autoComplete="nickname"
+              id="nickname"
+              name="nickname"
+              placeholder="Nickname"
+              required
+            />
+            {actionData?.errors?.nickname ? (
+              <em className="text-xs text-red-700 not-italic">{actionData?.errors.nickname}</em>
+            ) : null}
             <FormInput
               labelText="Password"
               id="password"
@@ -65,9 +91,12 @@ export default function SignUp() {
                 type="password"
                 required
               />
-              <mark className="block p-2 text-xs font-medium text-gray-700 bg-transparent">
+              <mark className="block py-1 text-xs font-medium text-gray-700 bg-transparent">
                 {texts.PASSWORD_GUIDE}
               </mark>
+              {actionData?.errors?.password ? (
+                <em className="text-xs text-red-700 not-italic">{actionData?.errors.password}</em>
+              ) : null}
             </div>
             <FormCheckbox
               labelText="I agree to the Terms and Conditions"
@@ -76,9 +105,6 @@ export default function SignUp() {
               required
             />
             <FormButton buttonText={texts.SIGN_UP} />
-            {actionData?.errors?.password ? (
-              <em className="text-red-700 not-italic">{actionData?.errors.password}</em>
-            ) : null}
           </Form>
         </div>
       </div>
