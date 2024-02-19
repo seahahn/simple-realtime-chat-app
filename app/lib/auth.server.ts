@@ -40,6 +40,10 @@ export async function getUserSession(request: Request) {
   return storage.getSession(request.headers.get("Cookie"));
 }
 
+/**
+ * Redirects the user to the sign in page if they need to sign in
+ * This function is used for preventing unauthorized user from accessing the pages which needs user session
+ */
 export async function requireUserId(
   request: Request,
   redirectTo: string = new URL(request.url).pathname
@@ -48,9 +52,19 @@ export async function requireUserId(
   const userId = session.get(USER_SESSION_KEY);
   if (!userId || typeof userId !== "string") {
     const searchParams = new URLSearchParams([["redirectTo", redirectTo]]);
-    throw redirect(`/login?${searchParams}`);
+    throw redirect(`/signin?${searchParams}`);
   }
   return userId;
+}
+
+/**
+ * Redirects the user to the home page if they are signed in
+ * This function is used for preventing signed-in users from accessing the sign in, sign up and reset-password pages
+ */
+export async function preventSignedInUser(request: Request) {
+  const userId = await requireUserId(request);
+  if (userId) return redirect("/");
+  return null;
 }
 
 export async function getUserId(request: Request) {

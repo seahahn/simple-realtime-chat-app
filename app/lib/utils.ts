@@ -6,11 +6,19 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export function validateUrl(url: string) {
-  const urls = ["/"];
-  if (urls.includes(url)) {
-    return url;
+const DEFAULT_REDIRECT = "/";
+export function validateUrl(
+  to: FormDataEntryValue | string | null | undefined,
+  defaultRedirect: string = DEFAULT_REDIRECT
+) {
+  if (!to || typeof to !== "string") {
+    return defaultRedirect;
   }
-  return "/";
+
+  if (!to.startsWith("/") || to.startsWith("//")) {
+    return defaultRedirect;
+  }
+
+  return to;
 }
 export const badRequest = <T>(data: T) => json(data, {status: 400});
