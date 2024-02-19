@@ -1,25 +1,14 @@
 import stylesheet from "~/tailwind.css";
-import type { LinksFunction, MetaFunction } from "@remix-run/node";
-import {
-  Links,
-  LiveReload,
-  Meta,
-  Outlet,
-  Scripts,
-  ScrollRestoration,
-} from "@remix-run/react";
+import type {LinksFunction, MetaFunction} from "@remix-run/node";
+import {Links, LiveReload, Meta, Outlet, Scripts, ScrollRestoration} from "@remix-run/react";
 import TopBar from "./components/TopBar";
 import Footer from "./components/Footer";
+import texts from "./constants/texts";
 
-export const links: LinksFunction = () => [
-  { rel: "stylesheet", href: stylesheet },
-];
+export const links: LinksFunction = () => [{rel: "stylesheet", href: stylesheet}];
 
 export const meta: MetaFunction = () => {
-  return [
-    { title: "App for Salirs" },
-    { name: "description", content: "Welcome to Gyeongho's App" },
-  ];
+  return [{title: texts.APP_NAME}, {name: "description", content: texts.APP_DESCRIPTION}];
 };
 
 export default function App() {
