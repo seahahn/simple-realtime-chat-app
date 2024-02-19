@@ -1,9 +1,20 @@
 import stylesheet from "~/tailwind.css";
-import type {LinksFunction, MetaFunction} from "@remix-run/node";
-import {Links, LiveReload, Meta, Outlet, Scripts, ScrollRestoration} from "@remix-run/react";
+import type {LinksFunction, LoaderFunctionArgs, MetaFunction} from "@remix-run/node";
+import {
+  Links,
+  LiveReload,
+  Meta,
+  Outlet,
+  Scripts,
+  ScrollRestoration,
+  json,
+  useLoaderData,
+} from "@remix-run/react";
 import TopBar from "./components/TopBar";
 import Footer from "./components/Footer";
 import texts from "./constants/texts";
+import {getUser} from "./lib/auth.server";
+import {User} from "./constants/types";
 
 export const links: LinksFunction = () => [{rel: "stylesheet", href: stylesheet}];
 
@@ -11,7 +22,14 @@ export const meta: MetaFunction = () => {
   return [{title: texts.APP_NAME}, {name: "description", content: texts.APP_DESCRIPTION}];
 };
 
+export async function loader({request}: LoaderFunctionArgs) {
+  const user = await getUser(request);
+  return json({user});
+}
+
 export default function App() {
+  const {user} = useLoaderData<{user: User}>();
+
   return (
     <html lang="en">
       <head>
@@ -21,7 +39,7 @@ export default function App() {
         <Links />
       </head>
       <body>
-        <TopBar />
+        <TopBar user={user} />
         <Outlet />
         <Footer />
 

@@ -1,34 +1,59 @@
-import {Link} from "@remix-run/react";
+import {Form, Link} from "@remix-run/react";
+import texts from "~/constants/texts";
+import {User} from "~/constants/types";
 
-const TopBar = () => {
+interface PropTypes {
+  user: User;
+}
+
+const TopBar = ({user}: PropTypes) => {
   return (
     <header className="fixed w-full h-16 border-b flex items-center justify-center">
       <div className="container flex items-center justify-between px-4">
         <Link className="flex items-center gap-2 text-lg font-semibold" to="/">
           <FlagIcon className="h-6 w-6" />
-          <span>Ahn</span>
+          <span>{texts.APP_NAME}</span>
         </Link>
-        <nav className="hidden md:flex flex-1 max-w-2xl justify-center items-center gap-4 text-sm font-medium tracking-wide">
-          <Link className="text-gray-900" to="#">
-            Chat with People
-          </Link>
-          <Link className="text-gray-900" to="#">
-            Chat with AI
-          </Link>
-        </nav>
-        <button className="md:hidden">
-          <MenuIcon className="h-6 w-6" />
-          <span className="sr-only">Toggle navigation menu</span>
-        </button>
+        {user?.id ? (
+          <>
+            <nav className="hidden md:flex flex-1 max-w-2xl justify-center items-center gap-4 text-sm font-medium tracking-wide">
+              <Link className="text-gray-900" to="#">
+                {texts.CHAT_WITH_PEOPLE}
+              </Link>
+              <Link className="text-gray-900" to="#">
+                {texts.CHAT_WITH_AI}
+              </Link>
+            </nav>
+            <button className="md:hidden">
+              <MenuIcon className="h-6 w-6" />
+              <span className="sr-only">Toggle navigation menu</span>
+            </button>
+          </>
+        ) : null}
         <div className="flex items-center space-x-4">
-          <Link className="text-sm font-medium text-gray-900" to="/signin">
-            Sign In
-          </Link>
-          <Link
-            className="text-sm font-medium text-gray-50 bg-gray-900 rounded-md px-3 py-2"
-            to="/signup">
-            Sign Up
-          </Link>
+          {user?.id ? (
+            <>
+              <Link
+                className="text-sm font-medium text-gray-50 bg-gray-900 rounded-md px-3 py-2"
+                to="/profile">
+                {user.nickname}
+              </Link>
+              <Form action="/signout" method="post">
+                <button className="text-sm font-medium text-gray-900">{texts.SIGN_OUT}</button>
+              </Form>
+            </>
+          ) : (
+            <>
+              <Link className="text-sm font-medium text-gray-900" to="/signin">
+                {texts.SIGN_IN}
+              </Link>
+              <Link
+                className="text-sm font-medium text-gray-50 bg-gray-900 rounded-md px-3 py-2"
+                to="/signup">
+                {texts.SIGN_UP}
+              </Link>
+            </>
+          )}
         </div>
       </div>
     </header>

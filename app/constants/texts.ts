@@ -8,6 +8,9 @@ export default {
   RESET_PASSWORD: "Reset Password",
   USER_PROFILE: "User Profile",
 
+  CHAT_WITH_PEOPLE: "Chat with People",
+  CHAT_WITH_AI: "Chat with AI",
+
   SAVE_CHANGES: "Save Changes",
   DELETE_USER: "Delete User",
 
