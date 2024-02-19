@@ -1,7 +1,7 @@
 import bcrypt from "bcryptjs";
 import {db} from "./db.server";
 import {createCookieSessionStorage, redirect} from "@remix-run/node";
-import {SESSION_SECRET, USER_SESSION_KEY} from "~/constants/envs";
+import {HASH_SALT, SESSION_SECRET, USER_SESSION_KEY} from "~/constants/envs";
 
 interface SignInForm {
   email: string;
@@ -10,6 +10,10 @@ interface SignInForm {
 
 interface SignUpForm extends SignInForm {
   nickname: string;
+}
+
+interface UpdateUserForm extends Omit<SignUpForm, "password"> {
+  newPassword: string;
 }
 
 const storage = createCookieSessionStorage({
@@ -62,7 +66,8 @@ export async function requireUserId(
  * This function is used for preventing signed-in users from accessing the sign in, sign up and reset-password pages
  */
 export async function preventSignedInUser(request: Request) {
-  const userId = await requireUserId(request);
+  const session = await getUserSession(request);
+  const userId = session.get(USER_SESSION_KEY);
   if (userId) return redirect("/");
   return null;
 }
@@ -89,6 +94,40 @@ export async function getUser(request: Request) {
   }
 }
 
+export async function updateUser({email, newPassword, nickname}: UpdateUserForm) {
+  const user = await db.user.findUnique({
+    where: {email},
+  });
+  if (!user) return null;
+
+  const data: {nickname: string; password?: string} = {nickname};
+
+  if (newPassword) {
+    const passwordHash = await bcrypt.hash(newPassword, HASH_SALT);
+    data.password = passwordHash;
+  }
+
+  const updatedUser = await db.user.update({
+    where: {id: user.id},
+    data,
+    select: {id: true, email: true, nickname: true},
+  });
+  return updatedUser;
+}
+
+export async function deleteUser(email: string) {
+  const user = await db.user.findUnique({
+    where: {email},
+  });
+  if (!user) return null;
+
+  const deletedUser = await db.user.delete({
+    where: {id: user.id},
+    select: {id: true, email: true, nickname: true},
+  });
+  return deletedUser;
+}
+
 /**
  * Check if the user with the given email exists in the database
  * @param email - email of the user to check
@@ -102,16 +141,30 @@ export async function checkUserEmail(email: string) {
   return userExists ? true : false;
 }
 
-export async function checkUserNickname(nickname: string) {
+export async function checkUserNickname(nickname: string, email?: string) {
   const userExists = await db.user.findUnique({
     where: {nickname},
   });
 
+  // If email is provided, check if the user with the given email has the same nickname
+  if (email && userExists?.email === email) return false;
+
   return userExists ? true : false;
 }
 
+export async function checkUserPassword(email: string, password: string) {
+  const user = await db.user.findUnique({
+    where: {email},
+  });
+  if (!user) return null;
+
+  const isCorrectPassword = await bcrypt.compare(password, user.password);
+
+  return isCorrectPassword ? true : false;
+}
+
 export async function signUp({email, password, nickname}: SignUpForm) {
-  const passwordHash = await bcrypt.hash(password, 10);
+  const passwordHash = await bcrypt.hash(password, HASH_SALT);
   const user = await db.user.create({
     data: {email, password: passwordHash, nickname},
   });
