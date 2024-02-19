@@ -1,24 +1,36 @@
 import {ActionFunctionArgs} from "@remix-run/node";
-import {Form, Link, redirect} from "@remix-run/react";
+import {Form, Link, useActionData} from "@remix-run/react";
 import FormButton from "~/components/FormButton";
 import FormCheckbox from "~/components/FormCheckbox";
 import FormInput from "~/components/FormInput";
 import PageTitle from "~/components/PageTitle";
-import {Button} from "~/components/ui/button";
 import texts from "~/constants/texts";
+import {createUserSession, signIn} from "~/lib/auth.server";
+import {badRequest, validateUrl} from "~/lib/utils";
 
 export const action = async ({request}: ActionFunctionArgs) => {
   const formData = await request.formData();
-  const email = formData.get("email");
-  const password = formData.get("password");
+  const email = String(formData.get("email"));
+  const password = String(formData.get("password"));
+  const remember = !!formData.get("remember-me");
+  const redirectTo = validateUrl(String(formData.get("redirectTo")) || "/");
+
+  const errors: {formError?: string} = {};
 
   // Request to sign in with the email and password
   // and get the session data from the server
+  const user = await signIn({email, password});
+  if (!user) {
+    errors.formError = "Invalid email or password";
+    return badRequest({errors});
+  }
 
-  return redirect("/");
+  return createUserSession(user.id, remember, redirectTo);
 };
 
 export default function SignIn() {
+  const actionData = useActionData<typeof action>();
+
   return (
     <main className="min-h-screen bg-white flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <PageTitle titleText={texts.SIGN_IN} />
@@ -42,6 +54,9 @@ export default function SignIn() {
               required
               type="password"
             />
+            {actionData?.errors?.formError ? (
+              <em className="text-xs text-red-700 not-italic">{actionData?.errors.formError}</em>
+            ) : null}
             <FormCheckbox labelText="Remember me" id="remember-me" name="remember-me" />
             <FormButton buttonText={texts.SIGN_IN} />
             <div className="flex space-x-4">
