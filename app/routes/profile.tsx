@@ -15,6 +15,7 @@ import {
 import {User} from "~/constants/types";
 import {badRequest} from "~/lib/utils";
 import {FormEvent} from "react";
+import FormWarningText from "~/components/FormWarningText";
 
 export async function loader({request}: LoaderFunctionArgs) {
   await requireUserId(request);
@@ -117,7 +118,7 @@ export default function Profile() {
               required
             />
             {actionData?.errors?.nickname ? (
-              <em className="text-xs text-red-700 not-italic">{actionData?.errors.nickname}</em>
+              <FormWarningText warningText={actionData?.errors.nickname} />
             ) : null}
             <FormInput
               labelText="Current Password"
@@ -128,7 +129,7 @@ export default function Profile() {
               required
             />
             {actionData?.errors?.password ? (
-              <em className="text-xs text-red-700 not-italic">{actionData?.errors.password}</em>
+              <FormWarningText warningText={actionData?.errors.password} />
             ) : null}
             <FormInput
               labelText="New Password"

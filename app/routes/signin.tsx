@@ -3,6 +3,7 @@ import {Form, Link, useActionData, useSearchParams} from "@remix-run/react";
 import FormButton from "~/components/FormButton";
 import FormCheckbox from "~/components/FormCheckbox";
 import FormInput from "~/components/FormInput";
+import FormWarningText from "~/components/FormWarningText";
 import PageTitle from "~/components/PageTitle";
 import texts from "~/constants/texts";
 import {createUserSession, preventSignedInUser, signIn} from "~/lib/auth.server";
@@ -63,7 +64,7 @@ export default function SignIn() {
               type="password"
             />
             {actionData?.errors?.formError ? (
-              <em className="text-xs text-red-700 not-italic">{actionData?.errors.formError}</em>
+              <FormWarningText warningText={actionData?.errors.formError} />
             ) : null}
             <FormCheckbox labelText="Remember me" id="remember-me" name="remember-me" />
             <FormButton buttonText={texts.SIGN_IN} />

@@ -7,6 +7,7 @@ import PageTitle from "~/components/PageTitle";
 import FormButton from "~/components/FormButton";
 import {checkUserEmail, checkUserNickname, preventSignedInUser, signUp} from "~/lib/auth.server";
 import {badRequest} from "~/lib/utils";
+import FormWarningText from "~/components/FormWarningText";
 
 export async function loader({request}: LoaderFunctionArgs) {
   const checkUserSession = await preventSignedInUser(request);
@@ -65,7 +66,7 @@ export default function SignUp() {
               required
             />
             {actionData?.errors?.email ? (
-              <em className="text-xs text-red-700 not-italic">{actionData?.errors.email}</em>
+              <FormWarningText warningText={actionData?.errors.email} />
             ) : null}
             <FormInput
               labelText="Nickname"
@@ -76,7 +77,7 @@ export default function SignUp() {
               required
             />
             {actionData?.errors?.nickname ? (
-              <em className="text-xs text-red-700 not-italic">{actionData?.errors.nickname}</em>
+              <FormWarningText warningText={actionData?.errors.nickname} />
             ) : null}
             <FormInput
               labelText="Password"
@@ -100,15 +101,10 @@ export default function SignUp() {
                 {texts.PASSWORD_GUIDE}
               </mark>
               {actionData?.errors?.password ? (
-                <em className="text-xs text-red-700 not-italic">{actionData?.errors.password}</em>
+                <FormWarningText warningText={actionData?.errors.password} />
               ) : null}
             </div>
-            <FormCheckbox
-              labelText="I agree to the Terms and Conditions"
-              id="terms"
-              name="terms"
-              required
-            />
+            <FormCheckbox labelText={texts.AGREE_TO_TERMS} id="terms" name="terms" required />
             <FormButton buttonText={texts.SIGN_UP} />
           </Form>
         </div>

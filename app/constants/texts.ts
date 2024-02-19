@@ -14,6 +14,8 @@ export default {
   SAVE_CHANGES: "Save Changes",
   DELETE_USER: "Delete User",
 
+  AGREE_TO_TERMS: "I agree to the Terms and Conditions",
+
   PASSWORD_GUIDE:
     "Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, and one number.",
 
