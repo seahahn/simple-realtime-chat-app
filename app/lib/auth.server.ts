@@ -100,7 +100,9 @@ export async function updateUser({email, newPassword, nickname}: UpdateUserForm)
   });
   if (!user) return null;
 
-  const data: {nickname: string; password?: string} = {nickname};
+  const data: {nickname?: string; password?: string} = {};
+
+  if (nickname) data.nickname = nickname;
 
   if (newPassword) {
     const passwordHash = await bcrypt.hash(newPassword, HASH_SALT);

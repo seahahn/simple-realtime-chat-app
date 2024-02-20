@@ -21,4 +21,21 @@ export function validateUrl(
 
   return to;
 }
+
 export const badRequest = <T>(data: T) => json(data, {status: 400});
+
+export const PW_REGEX_STRING = "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$";
+export const PW_REGEX = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/;
+export function generateTempPassword(): string {
+  const validChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  let password = "";
+
+  do {
+    password = "";
+    for (let i = 0; i < 10; i++) {
+      password += validChars.charAt(Math.floor(Math.random() * validChars.length));
+    }
+  } while (!PW_REGEX.test(password));
+
+  return password;
+}
