@@ -6,7 +6,7 @@ import texts from "~/constants/texts";
 import PageTitle from "~/components/PageTitle";
 import FormButton from "~/components/FormButton";
 import {checkUserEmail, checkUserNickname, preventSignedInUser, signUp} from "~/lib/auth.server";
-import {badRequest} from "~/lib/utils";
+import {PW_REGEX_STRING, badRequest} from "~/lib/utils";
 import FormWarningText from "~/components/FormWarningText";
 
 export async function loader({request}: LoaderFunctionArgs) {
@@ -85,7 +85,7 @@ export default function SignUp() {
               name="password"
               placeholder="Password"
               type="password"
-              pattern="^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$"
+              pattern={`${PW_REGEX_STRING}`}
               required
             />
             <div>

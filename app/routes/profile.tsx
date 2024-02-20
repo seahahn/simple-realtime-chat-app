@@ -13,7 +13,7 @@ import {
   updateUser,
 } from "~/lib/auth.server";
 import {User} from "~/constants/types";
-import {badRequest} from "~/lib/utils";
+import {PW_REGEX_STRING, badRequest} from "~/lib/utils";
 import {FormEvent} from "react";
 import FormWarningText from "~/components/FormWarningText";
 
@@ -137,7 +137,7 @@ export default function Profile() {
               name="new-password"
               placeholder="Enter your new password"
               type="password"
-              pattern="^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$"
+              pattern={PW_REGEX_STRING}
             />
             <FormButton
               name="_action"
