@@ -3,6 +3,7 @@ import {PrismaClient} from "@prisma/client";
 let db: PrismaClient;
 
 declare global {
+  // eslint-disable-next-line no-var
   var __db: PrismaClient | undefined;
 }
 
@@ -10,7 +11,13 @@ declare global {
 // the server with every change, but we want to make sure we don't
 // create a new connection to the DB with every change either.
 if (process.env.NODE_ENV === "production") {
-  db = new PrismaClient();
+  db = new PrismaClient({
+    datasources: {
+      db: {
+        url: process.env.DATABASE_URL,
+      },
+    },
+  });
 } else {
   if (!global.__db) {
     global.__db = new PrismaClient();
