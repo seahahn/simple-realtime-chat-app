@@ -24,7 +24,7 @@ export default {
 
   RESET_PASSWORD_SUCCESS_TITLE: "Reset Password Email Sent",
   RESET_PASSWORD_SUCCESS_DESCRIPTION:
-    "An email with instructions to reset your password has been sent to your email address.",
+    "An email with your temporary password has been sent to your email address.",
 
   PROFILE_CHANGE_CONFIRM: "Are you sure you want to save the changes?",
   PROFILE_DELETE_CONFIRM: "Are you sure you want to delete your account?",
