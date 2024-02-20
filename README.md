@@ -1,7 +1,5 @@
 # App for Sailrs
 
-- [Go to Deployed Web Site](https://simple-realtime-chat-app-six.vercel.app/)
-
 ## Features
 
 ### User Authentication
@@ -16,6 +14,7 @@
 ### Chatting
 
 - Chat with People
+- Chat with AI (In progress)
 
 ## How to Run
 
