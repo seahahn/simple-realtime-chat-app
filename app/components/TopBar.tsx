@@ -8,7 +8,7 @@ interface PropTypes {
 
 const TopBar = ({user}: PropTypes) => {
   return (
-    <header className="fixed w-full h-16 border-b flex items-center justify-center">
+    <header className="fixed z-10 w-full h-16 border-b flex items-center justify-center bg-white">
       <div className="container flex items-center justify-between px-4">
         <Link className="flex items-center gap-2 text-lg font-semibold" to="/">
           <FlagIcon className="h-6 w-6" />
@@ -17,7 +17,7 @@ const TopBar = ({user}: PropTypes) => {
         {user?.id ? (
           <>
             <nav className="hidden md:flex flex-1 max-w-2xl justify-center items-center gap-4 text-sm font-medium tracking-wide">
-              <Link className="text-gray-900" to="#">
+              <Link className="text-gray-900" to="/chat">
                 {texts.CHAT_WITH_PEOPLE}
               </Link>
               <Link className="text-gray-900" to="#">
