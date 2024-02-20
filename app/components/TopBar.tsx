@@ -1,9 +1,9 @@
 import {Form, Link} from "@remix-run/react";
 import texts from "~/constants/texts";
-import {User} from "~/constants/types";
+import {UserSession} from "~/constants/types";
 
 interface PropTypes {
-  user: User;
+  user: UserSession;
 }
 
 const TopBar = ({user}: PropTypes) => {

@@ -12,7 +12,7 @@ import {
   requireUserId,
   updateUser,
 } from "~/lib/auth.server";
-import {User} from "~/constants/types";
+import {UserSession} from "~/constants/types";
 import {PW_REGEX_STRING, badRequest} from "~/lib/utils";
 import {FormEvent} from "react";
 import FormWarningText from "~/components/FormWarningText";
@@ -64,7 +64,7 @@ export const action = async ({request}: ActionFunctionArgs) => {
 };
 
 export default function Profile() {
-  const {user} = useLoaderData<{user: User}>();
+  const {user} = useLoaderData<{user: UserSession}>();
   const actionData = useActionData<typeof action>();
   const submit = useSubmit();
 

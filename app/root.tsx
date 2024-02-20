@@ -14,7 +14,7 @@ import TopBar from "./components/TopBar";
 import Footer from "./components/Footer";
 import texts from "./constants/texts";
 import {getUser} from "./lib/auth.server";
-import {User} from "./constants/types";
+import {UserSession} from "./constants/types";
 
 export const links: LinksFunction = () => [{rel: "stylesheet", href: stylesheet}];
 
@@ -28,7 +28,7 @@ export async function loader({request}: LoaderFunctionArgs) {
 }
 
 export default function App() {
-  const {user} = useLoaderData<{user: User}>();
+  const {user} = useLoaderData<{user: UserSession}>();
 
   return (
     <html lang="en">
