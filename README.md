@@ -13,6 +13,10 @@
 - User Profile Update
 - User Account Delete
 
+### Chatting
+
+- Chat with People
+
 ## How to Run
 
 ### Make a PostgreSQL database Docker container
@@ -37,6 +41,8 @@ EMAIL_HOST_USER="your-email@example.com"
 EMAIL_HOST_PASSWORD="your-password"
 EMAIL_PORT="465"
 EMAIL_DEFAULT_FROM="your-email@example.com"
+
+SOCKET_SERVER_URL="http://localhost:3500"
 ```
 
 ### Apply Prisma Schema into the database
@@ -48,5 +54,9 @@ npx prisma db push
 ### Run the App
 
 ```bash
+# Main application
 npm run dev
+
+# Socket server (it should be executed another terminal from the Main application)
+npm run dev:socket
 ```
