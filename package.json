@@ -4,10 +4,10 @@
   "scripts": {
     "build": "remix build",
     "dev": "remix dev --manual",
-    "dev:socket": "nodemon socket/index.js",
+    "dev:socket": "nodemon --exec 'node --loader ts-node/esm' socket/index.ts",
     "lint": "eslint --ignore-path .gitignore --cache --cache-location ./node_modules/.cache/eslint .",
     "start": "remix-serve ./build/index.js",
-    "start:socket": "node socket/index.js",
+    "start:socket": "node --loader ts-node/esm socket/index.ts",
     "typecheck": "tsc"
   },
   "dependencies": {
