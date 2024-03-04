@@ -1,6 +1,12 @@
 import express from "express";
 import {Server} from "socket.io";
 
+interface User {
+  userId: string;
+  nickname: string;
+  socketId: string;
+}
+
 const PORT = process.env.PORT || 3500;
 
 const app = express();
@@ -9,9 +15,9 @@ const expressServer = app.listen(PORT, () => {
   console.log(`listening on port ${PORT}`);
 });
 
-const UsersState = {
+const UsersState: {users: User[]; setUsers: (newUsersArray: User[]) => void} = {
   users: [],
-  setUsers: function (newUsersArray) {
+  setUsers: function (newUsersArray: User[]) {
     this.users = newUsersArray;
   },
 };
@@ -52,6 +58,7 @@ io.on("connection", (socket) => {
   // When user disconnects - to all others
   socket.on("disconnect", () => {
     const user = getUserBySocketId(socket.id);
+    if (!user) return;
 
     socket.broadcast.emit("message", {
       message: `User ${user.nickname} has left the chat`,
@@ -60,20 +67,21 @@ io.on("connection", (socket) => {
 
     deactivateUser(user.userId);
     io.emit("participant", UsersState.users);
+    console.log(`User ${socket.id} disconnected`);
   });
 });
 
 // User functions
-function activateUser(socketId, userId, nickname) {
+function activateUser(socketId: string, userId: string, nickname: string) {
   const user = {socketId, userId, nickname};
   UsersState.setUsers([...UsersState.users.filter((user) => user.userId !== userId), user]);
   return user;
 }
 
-function deactivateUser(userId) {
+function deactivateUser(userId: string) {
   UsersState.setUsers(UsersState.users.filter((user) => user.userId !== userId));
 }
 
-function getUserBySocketId(socketId) {
+function getUserBySocketId(socketId: string) {
   return UsersState.users.find((user) => user.socketId === socketId);
 }
