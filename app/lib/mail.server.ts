@@ -5,7 +5,7 @@ import {
   EMAIL_HOST_PASSWORD,
   EMAIL_HOST_USER,
   EMAIL_PORT,
-} from "~/constants/envs";
+} from "~/constants/envs.server";
 import Mail from "nodemailer/lib/mailer";
 
 const transport = nodemailer.createTransport({

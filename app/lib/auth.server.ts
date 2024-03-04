@@ -1,7 +1,7 @@
 import bcrypt from "bcryptjs";
 import {db} from "./db.server";
 import {createCookieSessionStorage, redirect} from "@remix-run/node";
-import {HASH_SALT, SESSION_SECRET, USER_SESSION_KEY} from "~/constants/envs";
+import {HASH_SALT, SESSION_SECRET, USER_SESSION_KEY} from "~/constants/envs.server";
 
 interface SignInForm {
   email: string;
