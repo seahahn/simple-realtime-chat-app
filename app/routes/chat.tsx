@@ -8,6 +8,7 @@ import type {Socket} from "socket.io-client";
 import {LoaderFunctionArgs, json} from "@remix-run/node";
 import {getUser, requireUserId} from "~/lib/auth.server";
 import {UserSession} from "~/constants/types";
+import {SOCKET_SERVER_URL} from "~/constants/envs.server";
 
 interface ServerMsgType {
   userId: string;
@@ -28,11 +29,11 @@ interface ParticipantType {
 export async function loader({request}: LoaderFunctionArgs) {
   await requireUserId(request);
   const user = await getUser(request);
-  return json({user});
+  return json({user, socketUrl: SOCKET_SERVER_URL});
 }
 
 export default function Chat() {
-  const {user} = useLoaderData<{user: UserSession}>();
+  const {user, socketUrl} = useLoaderData<{user: UserSession; socketUrl: string}>();
 
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [msgInput, setMsgInput] = useState("");
@@ -46,12 +47,12 @@ export default function Chat() {
 
   // Create a new chat connection
   useEffect(() => {
-    const connection = connect();
+    const connection = connect(socketUrl);
     setSocket(connection);
     return () => {
       connection.close();
     };
-  }, []);
+  }, [socketUrl]);
 
   // Listen for messages and participants list
   useEffect(() => {
